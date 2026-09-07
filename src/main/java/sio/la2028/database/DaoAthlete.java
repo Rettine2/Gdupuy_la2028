@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import sio.la2028.model.Athlete;
 import sio.la2028.model.Pays;
+import java.sql.Date;
 
 /**
  *
@@ -26,7 +27,7 @@ public class DaoAthlete {
         
         ArrayList<Athlete> lesAthletes = new ArrayList<Athlete>();
         try{
-            requeteSql = cnx.prepareStatement("select a.id as a_id, a.nom as a_nom, a.prenom as a_prenom, a.date_naissance as a_dateNaiss  p.id as p_id, p.nom as p_nom " +
+            requeteSql = cnx.prepareStatement("select a.id as a_id, a.nom as a_nom, a.prenom as a_prenom, a.date_naissance as a_dateNaiss,  p.id as p_id, p.nom as p_nom " +
                          " from athlete a inner join pays p " +
                          " on a.pays_id = p.id ");
             //System.out.println("REQ="+ requeteSql);

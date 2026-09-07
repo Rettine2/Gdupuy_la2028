@@ -8,6 +8,8 @@
 <%@page import="sio.la2028.model.Athlete"%>
 <%@page import="sio.la2028.model.Pays"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -63,7 +65,7 @@
                                 out.println(a.getId());
                                 out.println("</td>");
 
-                                out.println("<tr><td>");
+                                out.println("<td>");
                                 out.println(a.getPrenom());
                                 out.println("</td>");
 
@@ -71,8 +73,8 @@
                                 out.println(a.getNom());
                                 out.println("</a></td>");;
 
-                                out.println("<tr><td>");
-                                out.println(a.getDateNaissance());
+                                out.println("<td>");
+                                out.println(a.getDateNaissance().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                                 out.println("</td>");
 
                                 out.println("<td>");
