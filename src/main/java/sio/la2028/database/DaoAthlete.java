@@ -9,9 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import sio.la2028.model.Athlete;
-import sio.la2028.model.Pays;
-import sio.la2028.model.Sport;
+import sio.la2028.model.*;
 import java.sql.Date;
 
 /**
