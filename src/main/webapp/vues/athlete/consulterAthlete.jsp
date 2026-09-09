@@ -5,8 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="sio.la2028.model.Athlete"%>
-<%@page import="sio.la2028.model.Pays"%>
+<%@page import="sio.la2028.model.*"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -32,5 +32,8 @@
             <tr>
                 <td>Pays : </td><td><%  out.println(a.getPays().getNom());%></td>
             </tr>
+                <tr>
+                    <td>Sport : </td><td><%  out.println(a.getSport().getNom());%></td>
+                </tr>
         </table>
 </html>

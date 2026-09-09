@@ -19,6 +19,7 @@ Athlete {
     private String nom ;
     private LocalDate dateNaissance ;
     private Pays pays ;
+    private Sport sport;
     public Athlete() {
     }
 
@@ -65,6 +66,14 @@ Athlete {
 
     public void setPays(Pays pays) {
         this.pays = pays;
+    }
+
+    public Sport getSport() {
+        return sport;
+    }
+
+    public void setSport(Sport sport) {
+        this.sport = sport;
     }
     
     
