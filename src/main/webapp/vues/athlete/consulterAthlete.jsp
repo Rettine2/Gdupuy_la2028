@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="sio.la2028.model.*"%>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 
 <!DOCTYPE html>
 <html>
@@ -22,7 +23,7 @@
         <%
                 Athlete a = (Athlete)request.getAttribute("pAthlete");
         %>
-        <h1><%  out.println(a.getNom());%></h1>
+        <h1><%  out.println(a.getPrenom());%><%  out.println(a.getNom());%></h1>
             
                          
             <table>
@@ -32,6 +33,9 @@
             <tr>
                 <td>Pays : </td><td><%  out.println(a.getPays().getNom());%></td>
             </tr>
+                <tr>
+                    <td>Date de naissance : </td><td><%  out.println(a.getDateNaissance().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));%></td>
+                </tr>
                 <tr>
                     <td>Sport : </td><td><%  out.println(a.getSport().getNom());%></td>
                 </tr>
