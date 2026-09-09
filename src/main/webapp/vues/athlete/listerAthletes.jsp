@@ -5,8 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="sio.la2028.model.Athlete"%>
-<%@page import="sio.la2028.model.Pays"%>
+<%@page import="sio.la2028.model.*"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
 
@@ -53,7 +52,8 @@
                         <th>prenom</th>
                         <th>nom</th>
                         <th>date naissance</th>
-                        <th>pays</th>                
+                        <th>pays</th>
+                        <th>sport</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,6 +79,10 @@
 
                                 out.println("<td>");
                                 out.println(a.getPays().getNom());
+                                out.println("</td>");
+
+                                out.println("<td>");
+                                out.println(a.getSport().getNom());
                                 out.println("</td>");
                                
                             }
