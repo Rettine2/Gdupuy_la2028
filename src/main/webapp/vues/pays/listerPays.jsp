@@ -50,6 +50,7 @@
       <thead>
       <tr>
         <th>id</th>
+        <th>code</th>
         <th>nom</th>
       </tr>
       </thead>
