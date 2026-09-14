@@ -21,7 +21,7 @@ public class DaoEpreuve {
 
         ArrayList<epreuve> lesEpreuves = new ArrayList<epreuve>();
         try{
-            requeteSql = cnx.prepareStatement("select e.id as e_id, e.nom as e_nom, s.id as s_id, s.nom as s_nom, a.id as a_id, s.nom as s_nom, a.prenom as a_prenom " +
+            requeteSql = cnx.prepareStatement("select e.id as e_id, e.nom as e_nom, s.id as s_id, s.nom as s_nom, a.id as a_id, a.nom as a_nom, a.prenom as a_prenom " +
                     " from epreuve e inner join sport s" +
                     " on e.sport_id = s.id" +
                     " left join athlete a" +
