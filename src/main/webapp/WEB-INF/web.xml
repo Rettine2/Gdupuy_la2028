@@ -38,6 +38,18 @@
         <servlet-name>ServletEpreuve</servlet-name>
         <url-pattern>/ServletEpreuve/lister</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ServletPays</servlet-name>
+        <servlet-class>sio.la2028.servlet.ServletPays</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletPays</servlet-name>
+        <url-pattern>/ServletPays/lister</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletPays</servlet-name>
+        <url-pattern>/ServletPays/consulter</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
