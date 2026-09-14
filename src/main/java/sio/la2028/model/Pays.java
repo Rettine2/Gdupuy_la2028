@@ -23,7 +23,7 @@ public class Pays {
         this.code = code;
     }
 
-    private ArrayList<Athlete> lesAthletes ;
+    private ArrayList<Athlete> lesAthletes = new ArrayList<>() ;
 
     public Pays() {
     }

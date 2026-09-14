@@ -36,5 +36,12 @@
   <tr>
     <td>code : </td><td><%  out.println(p.getCode());%></td>
   </tr>
+  <tr>
+    <td>Athlete : </td><td><%
+    for (Athlete a : p.getLesAthletes()) {
+      out.println(a.getPrenom() + " " + a.getNom() + "<br>");
+    }
+    %></td>
+  </tr>
 </table>
 </html>
