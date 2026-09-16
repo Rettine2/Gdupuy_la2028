@@ -24,6 +24,7 @@ public class DaoEpreuve {
             requeteSql = cnx.prepareStatement("select e.id as e_id, e.nom as e_nom, s.id as s_id, s.nom as s_nom" +
                     " from epreuve e inner join sport s" +
                     " on e.sport_id = s.id");
+            //System.out.println("REQ="+ requeteSql);
             resultatRequete = requeteSql.executeQuery();
 
             while (resultatRequete.next()){
@@ -38,8 +39,6 @@ public class DaoEpreuve {
                 s.setNom(resultatRequete.getString("s_nom"));
 
                 e.setSport(s);
-
-                lesEpreuves.add(e);
             }
 
         }
