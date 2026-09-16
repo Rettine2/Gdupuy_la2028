@@ -52,8 +52,6 @@
         <th>id</th>
         <th>nom épreuve</th>
         <th>sport associé</th>
-        <th>nom athlete</th>
-        <th>prenom athlete</th>
       </tr>
       </thead>
       <tbody>
@@ -71,14 +69,6 @@
 
             out.println("<td>");
             out.println(e.getSport().getNom());
-            out.println("</td>");
-
-            out.println("<td>");
-            out.println(e.getAthlete().getNom());
-            out.println("</td>");
-
-            out.println("<td>");
-            out.println(e.getAthlete().getPrenom());
             out.println("</td>");
           }
         %>
