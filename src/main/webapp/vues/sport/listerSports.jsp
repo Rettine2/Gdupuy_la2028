@@ -62,7 +62,7 @@
             out.println(s.getId());
             out.println("</td>");
 
-            out.println("<td>");
+            out.println("<td><a href ='../ServletSport/consulter?idSport="+ s.getId()+ "'>");
             out.println(s.getNom());
             out.println("</td>");
           }
