@@ -33,7 +33,6 @@ public class DaoEpreuve {
                 e.setId(resultatRequete.getInt("e_id"));
                 e.setNom(resultatRequete.getString("e_nom"));
 
-                e.setLesEpreuves(e.getLesEpreuves());
 
                 Sport s = new Sport();
                 s.setId(resultatRequete.getInt("s_id"));
@@ -45,7 +44,7 @@ public class DaoEpreuve {
         }
         catch (SQLException e){
             e.printStackTrace();
-            System.out.println("La requête de getLesPompiers e généré une erreur");
+            System.out.println("La requête de getLesEpreuves a généré une erreur");
         }
         return lesEpreuves;
     }

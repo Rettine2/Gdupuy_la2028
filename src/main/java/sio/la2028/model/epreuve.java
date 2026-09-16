@@ -8,6 +8,9 @@ public class epreuve {
     private ArrayList<epreuve> lesEpreuves ;
     private Sport sport;
 
+    public epreuve() {
+    }
+
     public Sport getSport() {
         return sport;
     }
@@ -16,25 +19,12 @@ public class epreuve {
         this.sport = sport;
     }
 
-    public Athlete getAthlete() {
-        return athlete;
-    }
-
-    public void setAthlete(Athlete athlete) {
-        this.athlete = athlete;
-    }
-
     public ArrayList<epreuve> getLesEpreuves() {
         return lesEpreuves;
     }
 
     public void setLesEpreuves(ArrayList<epreuve> lesEpreuves) {
         this.lesEpreuves = lesEpreuves;
-    }
-
-    private Athlete athlete;
-
-    public epreuve() {
     }
 
     public epreuve(int id, String nom) {
