@@ -21,11 +21,9 @@ public class DaoEpreuve {
 
         ArrayList<epreuve> lesEpreuves = new ArrayList<epreuve>();
         try{
-            requeteSql = cnx.prepareStatement("select e.id as e_id, e.nom as e_nom, s.id as s_id, s.nom as s_nom, a.id as a_id, a.nom as a_nom, a.prenom as a_prenom " +
+            requeteSql = cnx.prepareStatement("select e.id as e_id, e.nom as e_nom, s.id as s_id, s.nom as s_nom" +
                     " from epreuve e inner join sport s" +
-                    " on e.sport_id = s.id" +
-                    " left join athlete a" +
-                    " on e.athlete_id = a.id");
+                    " on e.sport_id = s.id");
             //System.out.println("REQ="+ requeteSql);
             resultatRequete = requeteSql.executeQuery();
 
@@ -42,16 +40,6 @@ public class DaoEpreuve {
                 s.setNom(resultatRequete.getString("s_nom"));
 
                 e.setSport(s);
-
-                Athlete a = new Athlete();
-                a.setId(resultatRequete.getInt("a_id"));
-                a.setNom(resultatRequete.getString("a_nom"));
-                a.setPrenom(resultatRequete.getString("a_prenom"));
-
-                e.setAthlete(a);
-
-
-
             }
 
         }

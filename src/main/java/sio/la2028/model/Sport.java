@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Sport {
     private int id;
     private String nom ;
-    private ArrayList<Athlete> lesAthletes ;
+    private ArrayList<Athlete> lesAthletes = new ArrayList<>() ;
 
     public Sport() {
     }
@@ -33,6 +33,22 @@ public class Sport {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public ArrayList<Athlete> getLesAthletes() {
+        return lesAthletes;
+    }
+
+    public void setLesAthletes(ArrayList<Athlete> lesAthletes) {
+        this.lesAthletes = lesAthletes;
+    }
+
+    public void addAthlete(Athlete a){
+
+        if (lesAthletes == null){
+            lesAthletes = new ArrayList<Athlete>();
+        }
+        lesAthletes.add(a);
     }
 
 }
