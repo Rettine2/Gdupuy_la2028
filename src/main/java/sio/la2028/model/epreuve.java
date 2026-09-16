@@ -7,12 +7,21 @@ public class epreuve {
     private String nom ;
     private ArrayList<epreuve> lesEpreuves ;
     private Sport sport;
+    private Athlete athlete;
 
     public epreuve() {
     }
 
+    public Athlete getAthlete() {
+        return athlete;
+    }
+
     public Sport getSport() {
         return sport;
+    }
+
+    public void setAthlete(Athlete athlete) {
+        this.athlete = athlete;
     }
 
     public void setSport(Sport sport) {

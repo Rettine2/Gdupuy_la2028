@@ -83,6 +83,13 @@ public class ServletEpreuve extends HttpServlet {
             //System.out.println("lister eleves - nombres d'élèves récupérés" + lesEleves.size() );
             getServletContext().getRequestDispatcher("/vues/epreuve/listerEpreuves.jsp").forward(request, response);
         }
+        if(url.equals("/la2028/ServletEpreuve/consulter"))
+        {
+            int idEpreuve = Integer.parseInt(request.getParameter("idEpreuve"));
+            epreuve e = DaoEpreuve.getEpreuveById(cnx, idEpreuve);
+            request.setAttribute("pEpreuve", e);
+            getServletContext().getRequestDispatcher("/vues/epreuve/consulterEpreuves.jsp").forward(request, response);
+        }
     }
 
 
