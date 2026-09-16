@@ -30,6 +30,10 @@
         <servlet-name>ServletSport</servlet-name>
         <url-pattern>/ServletSport/lister</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletSport</servlet-name>
+        <url-pattern>/ServletSport/consulter</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>ServletEpreuve</servlet-name>
         <servlet-class>sio.la2028.servlet.ServletEpreuve</servlet-class>
