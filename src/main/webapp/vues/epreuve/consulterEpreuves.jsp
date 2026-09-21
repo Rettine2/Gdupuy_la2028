@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: sio2
-  Date: 16/09/2026
-  Time: 09:56
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="sio.la2028.model.*"%>
 
@@ -40,12 +33,16 @@
         </td>
     </tr>
     <tr>
-        <td>Athlète : </td>
+        <td>Athlètes participants : </td>
         <td>
             <%
-                // On affiche le prénom et le nom de l'athlète lié à l'épreuve
-                if (e.getAthlete() != null) {
-                    out.println(e.getAthlete().getPrenom() + " " + e.getAthlete().getNom());
+                // On boucle sur la liste des athlètes
+                if (e.getLesAthletes() != null && !e.getLesAthletes().isEmpty()) {
+                    for (Athlete a : e.getLesAthletes()) {
+                        out.println("- " + a.getPrenom() + " " + a.getNom() + "<br>");
+                    }
+                } else {
+                    out.println("Aucun athlète n'est inscrit à cette épreuve.");
                 }
             %>
         </td>

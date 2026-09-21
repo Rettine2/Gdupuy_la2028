@@ -4,41 +4,19 @@ import java.util.ArrayList;
 
 public class epreuve {
     private int id;
-    private String nom ;
-    private ArrayList<epreuve> lesEpreuves ;
+    private String nom;
     private Sport sport;
-    private Athlete athlete;
+
+    private ArrayList<Athlete> lesAthletes;
 
     public epreuve() {
-    }
-
-    public Athlete getAthlete() {
-        return athlete;
-    }
-
-    public Sport getSport() {
-        return sport;
-    }
-
-    public void setAthlete(Athlete athlete) {
-        this.athlete = athlete;
-    }
-
-    public void setSport(Sport sport) {
-        this.sport = sport;
-    }
-
-    public ArrayList<epreuve> getLesEpreuves() {
-        return lesEpreuves;
-    }
-
-    public void setLesEpreuves(ArrayList<epreuve> lesEpreuves) {
-        this.lesEpreuves = lesEpreuves;
+        this.lesAthletes = new ArrayList<Athlete>();
     }
 
     public epreuve(int id, String nom) {
         this.id = id;
         this.nom = nom;
+        this.lesAthletes = new ArrayList<Athlete>();
     }
 
     public int getId() {
@@ -57,4 +35,19 @@ public class epreuve {
         this.nom = nom;
     }
 
+    public Sport getSport() {
+        return sport;
+    }
+
+    public void setSport(Sport sport) {
+        this.sport = sport;
+    }
+
+    public ArrayList<Athlete> getLesAthletes() {
+        return lesAthletes;
+    }
+
+    public void setLesAthletes(ArrayList<Athlete> lesAthletes) {
+        this.lesAthletes = lesAthletes;
+    }
 }
