@@ -17,7 +17,12 @@
 
         .matchup-hero { text-align: center; padding: 80px 20px; background: radial-gradient(circle at center, rgba(213,255,0,0.05) 0%, transparent 70%); border-bottom: 1px solid var(--border); }
         .sport-label { font-family: 'Teko', sans-serif; color: var(--volt); font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-        .matchup-title { font-family: 'Teko', sans-serif; font-size: 5rem; line-height: 0.9; text-transform: uppercase; text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .matchup-title { font-family: 'Teko', sans-serif; font-size: 5rem; line-height: 0.9; text-transform: uppercase; text-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 30px; }
+
+        /* DESIGN DU BLOC LIEUX (NOUVEAU) */
+        .locations-wrapper { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .site-tag { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); padding: 8px 20px; font-family: 'Teko', sans-serif; font-size: 1.5rem; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        .site-tag span { color: var(--muted); font-size: 1.2rem; }
 
         .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
         .section-title { font-family: 'Teko', sans-serif; font-size: 2.5rem; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 30px; text-transform: uppercase; }
@@ -32,7 +37,7 @@
         .back-btn { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--text); text-decoration: none; display: inline-block; margin-top: 40px; padding: 10px 30px; border: 1px solid var(--border); transition: 0.3s; }
         .back-btn:hover { background: var(--text); color: var(--bg); }
 
-        /* DESIGN CORRIGÉ DU POPUP (ESPACEMENT ET LISIBILITÉ) */
+        /* POPUP */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,5,7,0.85); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
         .modal-card { background: var(--surface); border: 1px solid var(--pink); width: 440px; padding: 45px 35px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
         .modal-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--pink); }
@@ -59,6 +64,19 @@
 <div class="matchup-hero">
     <% if (e.getSport() != null) { %><div class="sport-label">/// <%= e.getSport().getNom() %></div><% } %>
     <h1 class="matchup-title"><%= e.getNom() %></h1>
+
+    <!-- AFFICHAGE DYNAMIQUE DES SITES -->
+    <div class="locations-wrapper">
+        <%
+            if (e.getLesSites() != null && !e.getLesSites().isEmpty()) {
+                for (Site s : e.getLesSites()) {
+        %>
+        <div class="site-tag">📍 <%= s.getNom() %> <span>(<%= s.getVille() %>)</span></div>
+        <%
+                }
+            }
+        %>
+    </div>
 </div>
 
 <div class="container">
@@ -87,16 +105,13 @@
     <a href="../ServletEpreuve/lister" class="back-btn">RETOUR AU LOBBY</a>
 </div>
 
-<!-- STRUCTURE DU POPUP PROPRE ET AÉRÉ -->
 <div id="athleteModal" class="modal-overlay" onclick="closeModal()">
     <div class="modal-card" onclick="event.stopPropagation()">
         <button class="modal-close" onclick="closeModal()">&times;</button>
-
         <div class="modal-header-block">
             <div class="modal-prenom" id="mPrenom"></div>
             <div class="modal-nom" id="mNom"></div>
         </div>
-
         <div class="modal-info-group">
             <div class="modal-info-item">
                 <div class="modal-label">Délégation / Pays</div>
@@ -123,7 +138,6 @@
         document.getElementById('mDate').innerText = dateN;
         document.getElementById('athleteModal').style.display = 'flex';
     }
-
     function closeModal() {
         document.getElementById('athleteModal').style.display = 'none';
     }

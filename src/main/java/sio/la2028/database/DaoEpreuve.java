@@ -52,7 +52,8 @@ public class DaoEpreuve {
         epreuve e = null;
 
         try {
-            String sql = "SELECT e.id AS e_id, e.nom AS e_nom, " +
+            // 1ère REQUÊTE : On récupère l'épreuve, le sport et les athlètes
+            String sqlAthletes = "SELECT e.id AS e_id, e.nom AS e_nom, " +
                     "s.id AS s_id, s.nom AS s_nom, " +
                     "a.id AS a_id, a.prenom AS a_prenom, a.nom AS a_nom, a.date_naissance AS a_date_naissance, " +
                     "p.id AS p_id, p.Code AS p_code, p.nom AS p_nom, " +
@@ -65,13 +66,11 @@ public class DaoEpreuve {
                     "LEFT JOIN sport sa ON a.sport_id = sa.id " +
                     "WHERE e.id = ?";
 
-            requeteSql = cnx.prepareStatement(sql);
+            requeteSql = cnx.prepareStatement(sqlAthletes);
             requeteSql.setInt(1, idEpreuve);
-
             resultatRequete = requeteSql.executeQuery();
 
             while (resultatRequete.next()) {
-
                 if (e == null) {
                     e = new epreuve();
                     e.setId(resultatRequete.getInt("e_id"));
@@ -105,6 +104,32 @@ public class DaoEpreuve {
                     a.setSport(sa);
 
                     e.getLesAthletes().add(a);
+                }
+            }
+
+            // 2ème REQUÊTE : On récupère les sites associés à cette épreuve (NOUVEAU)
+            if (e != null) {
+                String sqlSites = "SELECT si.id, si.nom, si.ville, p.nom as pays_nom " +
+                        "FROM site si " +
+                        "INNER JOIN site_epreuve se ON si.id = se.site_id " +
+                        "INNER JOIN pays p ON si.pays_id = p.id " +
+                        "WHERE se.epreuve_id = ?";
+
+                PreparedStatement reqSites = cnx.prepareStatement(sqlSites);
+                reqSites.setInt(1, idEpreuve);
+                ResultSet rsSites = reqSites.executeQuery();
+
+                while (rsSites.next()) {
+                    Site site = new Site();
+                    site.setId(rsSites.getInt("id"));
+                    site.setNom(rsSites.getString("nom"));
+                    site.setVille(rsSites.getString("ville"));
+
+                    Pays p = new Pays();
+                    p.setNom(rsSites.getString("pays_nom"));
+                    site.setPays(p);
+
+                    e.getLesSites().add(site);
                 }
             }
 
