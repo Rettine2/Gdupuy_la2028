@@ -8,9 +8,11 @@ public class epreuve {
     private Sport sport;
 
     private ArrayList<Athlete> lesAthletes;
+    private ArrayList<Site> lesSites;
 
     public epreuve() {
         this.lesAthletes = new ArrayList<Athlete>();
+        this.lesSites = new ArrayList<Site>();
     }
 
     public epreuve(int id, String nom) {
@@ -49,5 +51,13 @@ public class epreuve {
 
     public void setLesAthletes(ArrayList<Athlete> lesAthletes) {
         this.lesAthletes = lesAthletes;
+    }
+
+    public ArrayList<Site> getLesSites() {
+        return lesSites;
+    }
+
+    public void setLesSites(ArrayList<Site> lesSites) {
+        this.lesSites = lesSites;
     }
 }

@@ -58,6 +58,18 @@
         <servlet-name>ServletPays</servlet-name>
         <url-pattern>/ServletPays/consulter</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ServletSite</servlet-name>
+        <servlet-class>sio.la2028.servlet.ServletSite</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletSite</servlet-name>
+        <url-pattern>/ServletSite/lister</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletSite</servlet-name>
+        <url-pattern>/ServletSite/consulter</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
