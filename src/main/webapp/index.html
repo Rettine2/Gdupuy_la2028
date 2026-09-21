@@ -1,10 +1,53 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>LA28 BETTING | L'Élite du Pari Sportif</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Teko:wght@600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #050507; --surface: #0f1015; --volt: #D5FF00; --pink: #FF004D; --text: #fff; --muted: #666A7A; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle at 50% 0%, rgba(255, 0, 77, 0.15) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(213, 255, 0, 0.1) 0%, transparent 50%), var(--bg); }
+        .hero { text-align: center; z-index: 10; position: relative; }
+        .live-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 0, 77, 0.1); border: 1px solid var(--pink); color: var(--pink); font-family: 'Teko', sans-serif; font-size: 1.5rem; padding: 4px 16px; text-transform: uppercase; letter-spacing: 1px; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); margin-bottom: 20px; animation: pulse 2s infinite; }
+        .live-tag .dot { width: 8px; height: 8px; background: var(--pink); border-radius: 50%; box-shadow: 0 0 10px var(--pink); }
+        h1 { font-family: 'Teko', sans-serif; font-size: 8rem; line-height: 0.9; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 span { color: var(--volt); }
+        p.sub { font-size: 1.1rem; color: var(--muted); max-width: 500px; margin: 0 auto 50px auto; line-height: 1.5; }
+
+        .portal-grid { display: flex; gap: 20px; justify-content: center; }
+        .cyber-card { position: relative; background: var(--surface); border: 1px solid rgba(255,255,255,0.05); width: 320px; padding: 40px 30px; text-align: left; text-decoration: none; color: var(--text); transition: 0.4s; overflow: hidden; }
+        .cyber-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--muted); transition: 0.4s; }
+        .cyber-card:hover { transform: translateY(-5px); background: #16181f; border-color: rgba(255,255,255,0.1); }
+        .cyber-card:hover::before { background: var(--volt); box-shadow: 0 0 15px var(--volt); }
+        .cyber-card:nth-child(2):hover::before { background: var(--pink); box-shadow: 0 0 15px var(--pink); }
+        .cyber-card h3 { font-family: 'Teko', sans-serif; font-size: 2.5rem; font-weight: 600; margin-bottom: 10px; letter-spacing: 1px; }
+        .cyber-card p { font-size: 0.9rem; color: var(--muted); margin-bottom: 30px; }
+        .cyber-card .arr { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--bg); background: var(--text); padding: 5px 20px; display: inline-block; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); transition: 0.3s; }
+        .cyber-card:hover .arr { background: var(--volt); }
+        .cyber-card:nth-child(2):hover .arr { background: var(--pink); }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    </style>
+</head>
+<body>
+<div class="hero">
+    <div class="live-tag"><div class="dot"></div> Paris Ouverts</div>
+    <h1>LA28 <span>Sportsbook</span></h1>
+    <p class="sub">Analysez les statistiques en temps réel, consultez les alignements et placez vos pronostics sur les athlètes de Los Angeles 2028.</p>
+
+    <div class="portal-grid">
+        <a href="/la2028/ServletEpreuve/lister" class="cyber-card">
+            <h3>LOBBY ÉPREUVES</h3>
+            <p>Cotes, tableaux et confrontations en direct. Entrez dans l'arène des paris.</p>
+            <div class="arr">VOIR LES COTES</div>
+        </a>
+        <a href="/la2028/ServletAthlete/lister" class="cyber-card">
+            <h3>ROSTER ATHLÈTES</h3>
+            <p>Base de données complète, statistiques et état de forme des compétiteurs.</p>
+            <div class="arr">ANALYSER</div>
+        </a>
+    </div>
+</div>
+</body>
 </html>

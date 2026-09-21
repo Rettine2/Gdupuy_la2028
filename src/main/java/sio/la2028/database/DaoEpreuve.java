@@ -54,11 +54,15 @@ public class DaoEpreuve {
         try {
             String sql = "SELECT e.id AS e_id, e.nom AS e_nom, " +
                     "s.id AS s_id, s.nom AS s_nom, " +
-                    "a.id AS a_id, a.prenom AS a_prenom, a.nom AS a_nom " +
+                    "a.id AS a_id, a.prenom AS a_prenom, a.nom AS a_nom, a.date_naissance AS a_date_naissance, " +
+                    "p.id AS p_id, p.Code AS p_code, p.nom AS p_nom, " +
+                    "sa.id AS sa_id, sa.nom AS sa_nom " +
                     "FROM epreuve e " +
                     "INNER JOIN sport s ON e.sport_id = s.id " +
                     "LEFT JOIN epreuve_athlete ea ON e.id = ea.epreuve_id " +
                     "LEFT JOIN athlete a ON ea.athlete_id = a.id " +
+                    "LEFT JOIN pays p ON a.pays_id = p.id " +
+                    "LEFT JOIN sport sa ON a.sport_id = sa.id " +
                     "WHERE e.id = ?";
 
             requeteSql = cnx.prepareStatement(sql);
@@ -84,6 +88,21 @@ public class DaoEpreuve {
                     a.setId(resultatRequete.getInt("a_id"));
                     a.setPrenom(resultatRequete.getString("a_prenom"));
                     a.setNom(resultatRequete.getString("a_nom"));
+
+                    if (resultatRequete.getDate("a_date_naissance") != null) {
+                        a.setDateNaissance(resultatRequete.getDate("a_date_naissance").toLocalDate());
+                    }
+
+                    Pays p = new Pays();
+                    p.setId(resultatRequete.getInt("p_id"));
+                    p.setCode(resultatRequete.getString("p_code"));
+                    p.setNom(resultatRequete.getString("p_nom"));
+                    a.setPays(p);
+
+                    Sport sa = new Sport();
+                    sa.setId(resultatRequete.getInt("sa_id"));
+                    sa.setNom(resultatRequete.getString("sa_nom"));
+                    a.setSport(sa);
 
                     e.getLesAthletes().add(a);
                 }
