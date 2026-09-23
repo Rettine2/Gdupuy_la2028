@@ -2,6 +2,25 @@
 <%@page import="sio.la2028.model.*"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
+<%!
+    public String getFilename(String code) {
+        if (code == null) return "fr";
+        switch (code.toUpperCase()) {
+            case "FRA": return "fr";
+            case "USA": return "us";
+            case "ALG": return "dz";
+            case "GER": return "de";
+            case "ANT": return "ag";
+            case "ARG": return "ar";
+            case "AUS": return "au";
+            case "AZE": return "az";
+            case "BLR": return "by";
+            case "BEL": return "be";
+            case "ALB": return "al";
+            default: return code.toLowerCase();
+        }
+    }
+%>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -25,7 +44,6 @@
         .cyber-input { flex: 1; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 15px 20px; font-family: 'Inter', sans-serif; font-size: 1rem; outline: none; transition: 0.3s; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); }
         .cyber-input:focus { border-color: var(--pink); background: rgba(255,0,77,0.02); }
 
-        /* Correction des listes déroulantes */
         select.cyber-input { cursor: pointer; }
         select.cyber-input option { background-color: var(--surface); color: var(--text); padding: 12px; }
 
@@ -34,10 +52,12 @@
         .player-card:hover { background: var(--surface-hover); border-top-color: var(--pink); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
         .card-top { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: flex-start; }
-        .tags { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
-        .tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; background: var(--border); border-radius: 4px; }
+        .tags { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+        .tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; background: var(--border); border-radius: 4px; display: flex; align-items: center; gap: 8px; }
         .tag.sport-cell { color: var(--pink); background: rgba(255,0,77,0.1); }
         .tag.pays-cell { color: var(--text); }
+
+        .flag-preview { width: 22px; height: auto; border-radius: 2px; }
 
         .name { font-family: 'Teko', sans-serif; font-size: 2.5rem; line-height: 1; text-transform: uppercase; }
         .name span { display: block; font-weight: 400; font-size: 1.5rem; color: var(--muted); }
@@ -77,7 +97,12 @@
                 </div>
                 <div class="tags">
                     <div class="tag sport-cell"><%= a.getSport().getNom() %></div>
-                    <div class="tag pays-cell"><%= a.getPays().getNom() %></div>
+                    <div class="tag pays-cell">
+                        <% if(a.getPays() != null && a.getPays().getCode() != null) { %>
+                        <img src="<%= request.getContextPath() %>/vues/image/<%= getFilename(a.getPays().getCode()) %>.png" alt="" class="flag-preview">
+                        <% } %>
+                        <%= a.getPays().getNom() %>
+                    </div>
                 </div>
             </div>
             <div class="card-bottom">
@@ -94,7 +119,6 @@
         const grid = document.getElementById('athleteGrid');
         const cards = Array.from(grid.querySelectorAll('.player-card'));
 
-        // Tri alphabétique initial par nom de famille
         cards.sort((a, b) => a.getAttribute('data-nom').localeCompare(b.getAttribute('data-nom')));
         cards.forEach(card => grid.appendChild(card));
 
@@ -105,7 +129,8 @@
 
         cards.forEach(c => {
             sports.add(c.querySelector('.sport-cell').innerText);
-            pays.add(c.querySelector('.pays-cell').innerText);
+            const paysText = c.querySelector('.pays-cell').innerText.trim();
+            pays.add(paysText);
         });
 
         Array.from(sports).sort().forEach(s => sportFilter.add(new Option(s, s)));
@@ -114,9 +139,10 @@
         function filterCards() {
             const sVal = searchInput.value.toLowerCase(), spVal = sportFilter.value.toLowerCase(), pVal = paysFilter.value.toLowerCase();
             cards.forEach(c => {
+                const paysText = c.querySelector('.pays-cell').innerText.toLowerCase().trim();
                 const match = c.querySelector('.name').innerText.toLowerCase().includes(sVal) &&
                     (spVal === "" || c.querySelector('.sport-cell').innerText.toLowerCase() === spVal) &&
-                    (pVal === "" || c.querySelector('.pays-cell').innerText.toLowerCase() === pVal);
+                    (pVal === "" || paysText === pVal);
                 c.style.display = match ? 'flex' : 'none';
             });
         }
