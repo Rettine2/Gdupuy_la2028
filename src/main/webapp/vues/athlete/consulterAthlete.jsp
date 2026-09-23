@@ -19,6 +19,22 @@
             default: return code.toLowerCase();
         }
     }
+
+    // Fonction de correspondance exacte basée sur tes fichiers réels du disque
+    public String getAthleteImageFilename(String prenom, String nom) {
+        if (prenom == null || nom == null) return "default";
+
+        String fullName = (prenom + " " + nom).trim();
+
+        // Cas particuliers identifiés sur tes captures d'écran
+        if (fullName.contains("Mélanie")) return "Mélanie_De_Jesus_dos_Santos";
+        if (fullName.contains("Wout")) return "Wout_Van_Aert";
+        if (fullName.contains("Diego")) return "Diego_Sebastián_Schwartzman";
+        if (fullName.contains("Sydney")) return "Sydney_McLaughlin";
+
+        // Format standard pour les autres
+        return (prenom.trim() + "_" + nom.trim()).replaceAll("\\s+", "_");
+    }
 %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -34,19 +50,24 @@
         .logo { font-family: 'Teko', sans-serif; font-size: 2.5rem; color: var(--text); text-decoration: none; line-height: 1; }
         .logo span { color: var(--pink); }
 
-        .container { max-width: 900px; margin: 60px auto; padding: 0 20px; }
+        .container { max-width: 950px; margin: 60px auto; padding: 0 20px; }
 
         .player-card-huge { background: var(--surface); border: 1px solid var(--border); padding: 50px; position: relative; overflow: hidden; }
         .player-card-huge::after { content: ''; position: absolute; bottom: 0; right: 0; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,0,77,0.15) 0%, transparent 70%); }
 
-        .player-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 20px; margin-bottom: 40px; position: relative; z-index: 2; flex-wrap: wrap; gap: 20px; }
-        .names { display: flex; flex-direction: column; }
-        .first-name { font-family: 'Teko', sans-serif; font-size: 2.5rem; color: var(--muted); line-height: 0.8; text-transform: uppercase; }
-        .last-name { font-family: 'Teko', sans-serif; font-size: 6rem; font-weight: 900; line-height: 0.9; text-transform: uppercase; color: var(--text); }
+        .player-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 25px; margin-bottom: 40px; position: relative; z-index: 2; flex-wrap: wrap; gap: 20px; }
 
-        .country-box { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px 30px; white-space: nowrap; }
-        .country-flag { width: 55px; height: auto; border-radius: 3px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); object-fit: cover; }
-        .country-name { font-family: 'Teko', sans-serif; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1px; line-height: 1; color: var(--text); }
+        .identity-group { display: flex; align-items: center; gap: 30px; flex: 1; min-width: 0; }
+
+        .athlete-avatar { width: 140px; height: 140px; object-fit: cover; border: 2px solid var(--pink); box-shadow: 0 0 25px rgba(255,0,77,0.4); clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%); background: #16181f; flex-shrink: 0; }
+
+        .names { display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+        .first-name { font-family: 'Teko', sans-serif; font-size: 2.5rem; color: var(--muted); line-height: 0.8; text-transform: uppercase; }
+        .last-name { font-family: 'Teko', sans-serif; font-size: clamp(2.5rem, 5vw, 5rem); font-weight: 900; line-height: 0.95; text-transform: uppercase; color: var(--text); word-break: break-word; }
+
+        .country-box { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px 25px; white-space: nowrap; flex-shrink: 0; }
+        .country-flag { width: 50px; height: auto; border-radius: 3px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); object-fit: cover; }
+        .country-name { font-family: 'Teko', sans-serif; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px; line-height: 1; color: var(--text); }
 
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; position: relative; z-index: 2; }
         .data-box { border: 1px solid var(--border); padding: 25px; background: rgba(5,5,7,0.5); }
@@ -67,9 +88,16 @@
 
     <div class="player-card-huge">
         <div class="player-header">
-            <div class="names">
-                <span class="first-name"><%= a.getPrenom() %></span>
-                <span class="last-name"><%= a.getNom() %></span>
+            <div class="identity-group">
+                <!-- Appel de la fonction sécurisée pointant vers les fichiers exacts du disque -->
+                <img src="<%= request.getContextPath() %>/vues/image/<%= getAthleteImageFilename(a.getPrenom(), a.getNom()) %>.jpg"
+                     alt="<%= a.getPrenom() %> <%= a.getNom() %>"
+                     class="athlete-avatar"
+                     onerror="this.style.display='none'">
+                <div class="names">
+                    <span class="first-name"><%= a.getPrenom() %></span>
+                    <span class="last-name"><%= a.getNom() %></span>
+                </div>
             </div>
             <div class="country-box">
                 <% if(a.getPays() != null && a.getPays().getCode() != null) { %>
