@@ -18,7 +18,12 @@
     .nav-links a:hover, .nav-links a.active { color: var(--gold); text-shadow: 0 0 10px rgba(255,184,0,0.3); }
 
     .container { max-width: 1000px; margin: 50px auto; padding: 0 20px; }
-    .header-title { font-family: 'Teko', sans-serif; font-size: 4rem; text-transform: uppercase; margin-bottom: 40px; letter-spacing: 1px; }
+
+    .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+    .header-title { font-family: 'Teko', sans-serif; font-size: 4rem; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+
+    .btn-cyber { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--bg); background: var(--gold); padding: 8px 25px; text-decoration: none; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); font-weight: 700; transition: 0.3s; display: inline-block; }
+    .btn-cyber:hover { opacity: 0.85; box-shadow: 0 0 15px rgba(255,184,0,0.4); transform: translateY(-2px); }
 
     .cyber-table-wrapper { background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
     .cyber-table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -44,7 +49,10 @@
 </header>
 
 <div class="container">
-  <h1 class="header-title">Liste des Sports</h1>
+  <div class="header-flex">
+    <h1 class="header-title">Liste des Sports</h1>
+    <a href="ajouterSports.jsp" class="btn-cyber">+ AJOUTER UN SPORT</a>
+  </div>
 
   <div class="cyber-table-wrapper">
     <table class="cyber-table">
