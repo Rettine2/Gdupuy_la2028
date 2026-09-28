@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="sio.la2028.model.Athlete" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -26,12 +28,15 @@
         .cyber-input:focus { border-color: var(--gold); background: rgba(255,184,0,0.02); }
 
         input[type="file"] { padding: 10px; cursor: pointer; color: var(--muted); }
+        select[multiple] { height: 130px; }
 
         .btn-submit { font-family: 'Teko', sans-serif; font-size: 1.6rem; color: var(--bg); background: var(--gold); width: 100%; padding: 12px; border: none; cursor: pointer; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); font-weight: 700; transition: 0.3s; text-transform: uppercase; margin-top: 10px; }
         .btn-submit:hover { opacity: 0.9; box-shadow: 0 0 20px rgba(255,184,0,0.4); }
 
         .back-btn { font-family: 'Teko', sans-serif; font-size: 1.4rem; color: var(--muted); text-decoration: none; display: inline-block; margin-top: 25px; transition: 0.3s; }
         .back-btn:hover { color: var(--text); }
+
+        .error-msg { background: rgba(255,0,0,0.1); border: 1px solid red; color: #ff6b6b; padding: 10px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -49,27 +54,40 @@
 <div class="container">
     <h1 class="header-title">Nouveau Sport</h1>
 
+    <% if (request.getAttribute("erreur") != null) { %>
+    <div class="error-msg"><%= request.getAttribute("erreur") %></div>
+    <% } %>
+
     <div class="form-card">
         <form action="../ServletSport/ajouter" method="POST" enctype="multipart/form-data">
 
+            <!-- Nom du Sport -->
             <div class="form-group">
-                <label class="form-label">Nom du Sport / Discipline</label>
+                <label class="form-label">Nom du Sport / Discipline *</label>
                 <input type="text" name="nomSport" class="cyber-input" placeholder="Ex: Escalade Sportive" required>
             </div>
 
+            <!-- Image / Illustration (Optionnel) -->
             <div class="form-group">
-                <label class="form-label">Nom du Pays associé (Optionnel)</label>
-                <input type="text" name="nomPays" class="cyber-input" placeholder="Ex: France">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Code du Pays (Optionnel)</label>
-                <input type="text" name="codePays" class="cyber-input" placeholder="Ex: FRA" maxlength="3">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Drapeau / Illustration (Dossier image)</label>
+                <label class="form-label">Illustration du Sport (Optionnel)</label>
                 <input type="file" name="imageSport" class="cyber-input">
+            </div>
+
+            <!-- Liste des athlètes pour association (Optionnel) -->
+            <div class="form-group">
+                <label class="form-label">Associer des athlètes (Optionnel - Maintenez Ctrl pour en sélectionner plusieurs)</label>
+                <select name="idsAthletes" class="cyber-input" multiple>
+                    <%
+                        ArrayList<Athlete> lesAthletes = (ArrayList<Athlete>) request.getAttribute("pLesAthletes");
+                        if (lesAthletes != null) {
+                            for (Athlete a : lesAthletes) {
+                    %>
+                    <option value="<%= a.getId() %>"><%= a.getNom() %> <%= a.getPrenom() %></option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
             </div>
 
             <button type="submit" class="btn-submit">VALIDER ET ENREGISTRER</button>

@@ -51,7 +51,7 @@
 <div class="container">
   <div class="header-flex">
     <h1 class="header-title">Liste des Sports</h1>
-    <a href="ajouterSports.jsp" class="btn-cyber">+ AJOUTER UN SPORT</a>
+    <a href="${pageContext.request.contextPath}/ServletSport/ajouter" class="btn-cyber">+ AJOUTER UN SPORT</a>
   </div>
 
   <div class="cyber-table-wrapper">
