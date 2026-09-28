@@ -1,6 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="sio.la2028.model.*"%>
 <%@page import="java.time.format.DateTimeFormatter" %>
+<%!
+    public String getSiteImageFilename(String siteName) {
+        if (siteName == null) return "default";
+        String name = siteName.trim().toLowerCase();
+        if (name.contains("sofi")) return "sofi";
+        if (name.contains("memorial") || name.contains("coliseum")) return "lamemorial";
+        if (name.contains("santa monica")) return "santamonica";
+        if (name.contains("crypto")) return "crypto";
+        if (name.contains("dignity")) return "dignity";
+        return name.replaceAll("\\s+", "_");
+    }
+%>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -14,15 +26,22 @@
         .topbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(5,5,7,0.95); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
         .logo { font-family: 'Teko', sans-serif; font-size: 2.5rem; color: var(--text); text-decoration: none; line-height: 1; }
         .logo span { color: var(--volt); }
+        .nav-links a { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--muted); text-decoration: none; margin-left: 30px; transition: 0.3s; text-transform: uppercase; }
+        .nav-links a:hover, .nav-links a.active { color: var(--volt); text-shadow: 0 0 10px rgba(213,255,0,0.3); }
 
-        .matchup-hero { text-align: center; padding: 80px 20px; background: radial-gradient(circle at center, rgba(213,255,0,0.05) 0%, transparent 70%); border-bottom: 1px solid var(--border); }
-        .sport-label { font-family: 'Teko', sans-serif; color: var(--volt); font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-        .matchup-title { font-family: 'Teko', sans-serif; font-size: 5rem; line-height: 0.9; text-transform: uppercase; text-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 30px; }
+        .matchup-hero { text-align: center; padding: 60px 20px; background: radial-gradient(circle at center, rgba(213,255,0,0.05) 0%, transparent 70%); border-bottom: 1px solid var(--border); }
+        .sport-label { font-family: 'Teko', sans-serif; color: var(--volt); font-size: 1.6rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+        .matchup-title { font-family: 'Teko', sans-serif; font-size: 5.5rem; line-height: 0.9; text-transform: uppercase; text-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 35px; }
 
-        /* DESIGN DU BLOC LIEUX (NOUVEAU) */
-        .locations-wrapper { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .site-tag { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); padding: 8px 20px; font-family: 'Teko', sans-serif; font-size: 1.5rem; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
-        .site-tag span { color: var(--muted); font-size: 1.2rem; }
+        /* GRANDE CARTE SITE BIEN VISIBLE */
+        .locations-wrapper { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; }
+        .site-highlight-card { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); padding: 15px 25px; gap: 20px; border-left: 4px solid var(--volt); box-shadow: 0 10px 25px rgba(0,0,0,0.5); transition: 0.3s; text-decoration: none; color: var(--text); }
+        .site-highlight-card:hover { border-color: var(--volt); transform: translateY(-3px); background: #16181f; }
+        .site-highlight-img { width: 110px; height: 75px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); }
+        .site-highlight-info { display: flex; flex-direction: column; text-align: left; }
+        .site-highlight-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+        .site-highlight-name { font-family: 'Teko', sans-serif; font-size: 2.3rem; text-transform: uppercase; line-height: 1; color: var(--text); }
+        .site-highlight-city { font-size: 0.9rem; color: var(--volt); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
         .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
         .section-title { font-family: 'Teko', sans-serif; font-size: 2.5rem; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 30px; text-transform: uppercase; }
@@ -57,6 +76,13 @@
 <body>
 <header class="topbar">
     <a href="../index.html" class="logo">LA28<span>BET</span></a>
+    <div class="nav-links">
+        <a href="../ServletAthlete/lister">Athlètes</a>
+        <a href="../ServletEpreuve/lister" class="active">Épreuves</a>
+        <a href="../ServletSite/lister">Sites</a>
+        <a href="../ServletSport/lister">Sports</a>
+        <a href="../ServletPays/lister">Pays</a>
+    </div>
 </header>
 
 <% epreuve e = (epreuve)request.getAttribute("pEpreuve"); %>
@@ -65,13 +91,20 @@
     <% if (e.getSport() != null) { %><div class="sport-label">/// <%= e.getSport().getNom() %></div><% } %>
     <h1 class="matchup-title"><%= e.getNom() %></h1>
 
-    <!-- AFFICHAGE DYNAMIQUE DES SITES -->
+    <!-- GRANDE CARTE SITE VISIBLE -->
     <div class="locations-wrapper">
         <%
             if (e.getLesSites() != null && !e.getLesSites().isEmpty()) {
                 for (Site s : e.getLesSites()) {
         %>
-        <div class="site-tag">📍 <%= s.getNom() %> <span>(<%= s.getVille() %>)</span></div>
+        <a href="../ServletSite/consulter?idSite=<%= s.getId() %>" class="site-highlight-card">
+            <img src="<%= request.getContextPath() %>/vues/image/<%= getSiteImageFilename(s.getNom()) %>.jpg" alt="" class="site-highlight-img" onerror="this.style.display='none'">
+            <div class="site-highlight-info">
+                <span class="site-highlight-label">Arène Officielle</span>
+                <span class="site-highlight-name"><%= s.getNom() %></span>
+                <span class="site-highlight-city">📍 <%= s.getVille() %></span>
+            </div>
+        </a>
         <%
                 }
             }
