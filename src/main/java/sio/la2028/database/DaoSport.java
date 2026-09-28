@@ -14,28 +14,21 @@ public class DaoSport {
     static ResultSet resultatRequete = null;
 
     public static ArrayList<Sport> getLesSports(Connection cnx){
-
         ArrayList<Sport> lesSports = new ArrayList<Sport>();
         try{
-            requeteSql = cnx.prepareStatement("select s.id as s_id, s.nom as s_nom" +
-                    " from sport s");
-            //System.out.println("REQ="+ requeteSql);
+            requeteSql = cnx.prepareStatement("select s.id as s_id, s.nom as s_nom from sport s");
             resultatRequete = requeteSql.executeQuery();
 
             while (resultatRequete.next()){
-
                 Sport s = new Sport();
                 s.setId(resultatRequete.getInt("s_id"));
                 s.setNom(resultatRequete.getString("s_nom"));
-
-
                 lesSports.add(s);
             }
-
         }
         catch (SQLException e){
             e.printStackTrace();
-            System.out.println("La requête de getLesPompiers e généré une erreur");
+            System.out.println("La requête de getLesSports a généré une erreur");
         }
         return lesSports;
     }
@@ -52,7 +45,6 @@ public class DaoSport {
             resultatRequete = requeteSql.executeQuery();
 
             while (resultatRequete.next()){
-
                 s.setId(resultatRequete.getInt("s_id"));
                 s.setNom(resultatRequete.getString("s_nom"));
 
@@ -66,8 +58,19 @@ public class DaoSport {
         }
         catch (SQLException e){
             e.printStackTrace();
-            System.out.println("La requête de getLesPompiers e généré une erreur");
+            System.out.println("La requête de getSportsById a généré une erreur");
         }
         return s;
+    }
+
+    public static void addSport(Connection cnx, Sport sport) {
+        try {
+            requeteSql = cnx.prepareStatement("INSERT INTO sport (nom) VALUES (?)");
+            requeteSql.setString(1, sport.getNom());
+            requeteSql.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("La requête de addSport a généré une erreur");
+        }
     }
 }
