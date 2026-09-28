@@ -39,7 +39,9 @@
     <div class="nav-links">
         <a href="../ServletAthlete/lister">Athlètes</a>
         <a href="../ServletEpreuve/lister">Épreuves</a>
-        <a href="../ServletSite/lister" class="active">Sites</a>
+        <a href="../ServletSite/lister">Sites</a>
+        <a href="../ServletSport/lister">Sports</a>
+        <a href="../ServletPays/lister">Pays</a>
     </div>
 </header>
 

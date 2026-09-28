@@ -5,18 +5,20 @@
     <title>LA28 BETTING | L'Élite du Pari Sportif</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Teko:wght@600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050507; --surface: #0f1015; --volt: #D5FF00; --pink: #FF004D; --cyan: #00F0FF; --text: #fff; --muted: #666A7A; }
+        :root { --bg: #050507; --surface: #0f1015; --volt: #D5FF00; --pink: #FF004D; --cyan: #00F0FF; --gold: #FFB800; --purple: #BD00FF; --text: #fff; --muted: #666A7A; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 0%, rgba(255, 0, 77, 0.15) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(213, 255, 0, 0.1) 0%, transparent 50%), var(--bg); }
-        .hero { text-align: center; z-index: 10; position: relative; padding: 40px 20px; max-width: 1100px; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 0%, rgba(255, 0, 77, 0.15) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(213, 255, 0, 0.1) 0%, transparent 50%), var(--bg); padding: 40px 20px; }
+        .hero { text-align: center; z-index: 10; position: relative; max-width: 1200px; width: 100%; }
         .live-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 0, 77, 0.1); border: 1px solid var(--pink); color: var(--pink); font-family: 'Teko', sans-serif; font-size: 1.5rem; padding: 4px 16px; text-transform: uppercase; letter-spacing: 1px; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); margin-bottom: 20px; animation: pulse 2s infinite; }
         .live-tag .dot { width: 8px; height: 8px; background: var(--pink); border-radius: 50%; box-shadow: 0 0 10px var(--pink); }
-        h1 { font-family: 'Teko', sans-serif; font-size: 7rem; line-height: 0.9; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { font-family: 'Teko', sans-serif; font-size: 6.5rem; line-height: 0.9; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         h1 span { color: var(--volt); }
-        p.sub { font-size: 1.1rem; color: var(--muted); max-width: 600px; margin: 0 auto 40px auto; line-height: 1.5; }
+        p.sub { font-size: 1.1rem; color: var(--muted); max-width: 650px; margin: 0 auto 50px auto; line-height: 1.5; }
 
-        .portal-grid { display: flex; gap: 20px; justify-content: center; align-items: stretch; flex-wrap: wrap; }
-        .cyber-card { position: relative; background: var(--surface); border: 1px solid rgba(255,255,255,0.05); width: 320px; padding: 40px 30px; text-align: left; text-decoration: none; color: var(--text); transition: 0.4s; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
+        /* Grille avec de grandes cartes bien lisibles */
+        .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; justify-content: center; align-items: stretch; }
+
+        .cyber-card { position: relative; background: var(--surface); border: 1px solid rgba(255,255,255,0.05); padding: 40px 30px; text-align: left; text-decoration: none; color: var(--text); transition: 0.4s; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; }
         .cyber-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--muted); transition: 0.4s; }
         .cyber-card:hover { transform: translateY(-5px); background: #16181f; border-color: rgba(255,255,255,0.1); }
 
@@ -29,9 +31,15 @@
         .cyber-card:nth-child(3):hover::before { background: var(--cyan); box-shadow: 0 0 15px var(--cyan); }
         .cyber-card:nth-child(3):hover .arr { background: var(--cyan); color: var(--bg); }
 
+        .cyber-card:nth-child(4):hover::before { background: var(--gold); box-shadow: 0 0 15px var(--gold); }
+        .cyber-card:nth-child(4):hover .arr { background: var(--gold); color: var(--bg); }
+
+        .cyber-card:nth-child(5):hover::before { background: var(--purple); box-shadow: 0 0 15px var(--purple); }
+        .cyber-card:nth-child(5):hover .arr { background: var(--purple); color: var(--text); }
+
         .cyber-card h3 { font-family: 'Teko', sans-serif; font-size: 2.5rem; font-weight: 600; margin-bottom: 10px; letter-spacing: 1px; }
-        .cyber-card p { font-size: 0.9rem; color: var(--muted); margin-bottom: 30px; }
-        .cyber-card .arr { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--bg); background: var(--text); padding: 5px 20px; display: inline-block; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); transition: 0.3s; }
+        .cyber-card p { font-size: 0.95rem; color: var(--muted); margin-bottom: 30px; line-height: 1.4; }
+        .cyber-card .arr { font-family: 'Teko', sans-serif; font-size: 1.4rem; color: var(--bg); background: var(--text); padding: 5px 20px; display: inline-block; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); transition: 0.3s; text-align: center; }
 
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     </style>
@@ -40,31 +48,52 @@
 <div class="hero">
     <div class="live-tag"><div class="dot"></div> Paris Ouverts</div>
     <h1>LA28 <span>Sportsbook</span></h1>
-    <p class="sub">Analysez les statistiques en temps réel, consultez les alignements et placez vos pronostics sur les athlètes de Los Angeles 2028.</p>
+    <p class="sub">Analysez les statistiques en temps réel, consultez les délégations et placez vos pronostics sur les athlètes de Los Angeles 2028.</p>
 
     <div class="portal-grid">
+        <!-- 1. Épreuves -->
         <a href="/la2028/ServletEpreuve/lister" class="cyber-card">
             <div>
-                <h3>LOBBY ÉPREUVES</h3>
-                <p>Cotes, tableaux et confrontations en direct. Entrez dans l'arène des paris.</p>
+                <h3>ÉPREUVES</h3>
+                <p>Cotes, tableaux et confrontations en direct. Entrez dans l'arène.</p>
             </div>
-            <div class="arr">VOIR LES COTES</div>
+            <div class="arr">EXPLORER</div>
         </a>
 
+        <!-- 2. Athlètes -->
         <a href="/la2028/ServletAthlete/lister" class="cyber-card">
             <div>
-                <h3>ROSTER ATHLÈTES</h3>
+                <h3>ATHLÈTES</h3>
                 <p>Base de données complète, statistiques et état de forme des compétiteurs.</p>
             </div>
             <div class="arr">ANALYSER</div>
         </a>
 
+        <!-- 3. Sites -->
         <a href="/la2028/ServletSite/lister" class="cyber-card">
             <div>
-                <h3>ARÈNES & SITES</h3>
+                <h3>SITES</h3>
                 <p>Explorez les stades mythiques et les emplacements officiels des compétitions.</p>
             </div>
-            <div class="arr">EXPLORER</div>
+            <div class="arr">VOIR LES LIEUX</div>
+        </a>
+
+        <!-- 4. Sports -->
+        <a href="/la2028/ServletSport/lister" class="cyber-card">
+            <div>
+                <h3>SPORTS</h3>
+                <p>Parcourez l'ensemble des disciplines et séries officielles des Jeux.</p>
+            </div>
+            <div class="arr">CONSULTER</div>
+        </a>
+
+        <!-- 5. Pays -->
+        <a href="/la2028/ServletPays/lister" class="cyber-card">
+            <div>
+                <h3>PAYS</h3>
+                <p>Découvrez les délégations internationales et leurs athlètes engagés.</p>
+            </div>
+            <div class="arr">DÉLÉGATIONS</div>
         </a>
     </div>
 </div>

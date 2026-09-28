@@ -20,20 +20,22 @@
         }
     }
 
-    // Fonction de correspondance exacte basée sur tes fichiers réels du disque
     public String getAthleteImageFilename(String prenom, String nom) {
         if (prenom == null || nom == null) return "default";
-
         String fullName = (prenom + " " + nom).trim();
-
-        // Cas particuliers identifiés sur tes captures d'écran
         if (fullName.contains("Mélanie")) return "Mélanie_De_Jesus_dos_Santos";
         if (fullName.contains("Wout")) return "Wout_Van_Aert";
         if (fullName.contains("Diego")) return "Diego_Sebastián_Schwartzman";
         if (fullName.contains("Sydney")) return "Sydney_McLaughlin";
-
-        // Format standard pour les autres
         return (prenom.trim() + "_" + nom.trim()).replaceAll("\\s+", "_");
+    }
+
+    // Nouvelle fonction pour la gestion des images de sport
+    public String getSportImageFilename(String sportName) {
+        if (sportName == null) return "default";
+        String name = sportName.trim().toLowerCase();
+        if (name.contains("gymnastique")) return "gymnastique";
+        return name.replaceAll("\\s+", "_");
     }
 %>
 <!DOCTYPE html>
@@ -58,7 +60,6 @@
         .player-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 25px; margin-bottom: 40px; position: relative; z-index: 2; flex-wrap: wrap; gap: 20px; }
 
         .identity-group { display: flex; align-items: center; gap: 30px; flex: 1; min-width: 0; }
-
         .athlete-avatar { width: 140px; height: 140px; object-fit: cover; border: 2px solid var(--pink); box-shadow: 0 0 25px rgba(255,0,77,0.4); clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%); background: #16181f; flex-shrink: 0; }
 
         .names { display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
@@ -73,6 +74,10 @@
         .data-box { border: 1px solid var(--border); padding: 25px; background: rgba(5,5,7,0.5); }
         .data-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-weight: 600; }
         .data-value { font-family: 'Teko', sans-serif; font-size: 2.5rem; color: var(--pink); line-height: 1; text-transform: uppercase; }
+
+        /* Style pour l'encadré de la discipline */
+        .sport-box { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .sport-image { width: 70px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid var(--pink); box-shadow: 0 0 10px rgba(255,0,77,0.2); flex-shrink: 0; }
 
         .back-btn { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--text); text-decoration: none; display: inline-block; margin-top: 40px; padding: 10px 30px; border: 1px solid var(--border); transition: 0.3s; }
         .back-btn:hover { background: var(--text); color: var(--bg); }
@@ -89,7 +94,6 @@
     <div class="player-card-huge">
         <div class="player-header">
             <div class="identity-group">
-                <!-- Appel de la fonction sécurisée pointant vers les fichiers exacts du disque -->
                 <img src="<%= request.getContextPath() %>/vues/image/<%= getAthleteImageFilename(a.getPrenom(), a.getNom()) %>.jpg"
                      alt="<%= a.getPrenom() %> <%= a.getNom() %>"
                      class="athlete-avatar"
@@ -108,9 +112,16 @@
         </div>
 
         <div class="data-grid">
-            <div class="data-box">
-                <div class="data-label">Discipline / Spécialité</div>
-                <div class="data-value"><%= a.getSport().getNom() %></div>
+            <!-- Box Sport modifiée pour inclure l'image -->
+            <div class="data-box sport-box">
+                <div>
+                    <div class="data-label">Discipline / Spécialité</div>
+                    <div class="data-value"><%= a.getSport().getNom() %></div>
+                </div>
+                <img src="<%= request.getContextPath() %>/vues/image/<%= getSportImageFilename(a.getSport().getNom()) %>.jpg"
+                     alt="<%= a.getSport().getNom() %>"
+                     class="sport-image"
+                     onerror="this.style.display='none'">
             </div>
             <div class="data-box">
                 <div class="data-label">Date de Naissance</div>
@@ -118,7 +129,6 @@
             </div>
         </div>
     </div>
-
     <a href="../ServletAthlete/lister" class="back-btn">RETOUR AU ROSTER</a>
 </div>
 </body>
