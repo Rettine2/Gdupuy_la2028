@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import sio.la2028.model.*;
 
 public class DaoSport {
 
-    Connection cnx;
     static PreparedStatement requeteSql = null;
     static ResultSet resultatRequete = null;
 
@@ -63,14 +63,35 @@ public class DaoSport {
         return s;
     }
 
-    public static void addSport(Connection cnx, Sport sport) {
+
+    public static int addSport(Connection cnx, Sport sport) {
+        int idGenere = -1;
         try {
-            requeteSql = cnx.prepareStatement("INSERT INTO sport (nom) VALUES (?)");
+            requeteSql = cnx.prepareStatement("INSERT INTO sport (nom) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
             requeteSql.setString(1, sport.getNom());
             requeteSql.executeUpdate();
+
+            resultatRequete = requeteSql.getGeneratedKeys();
+            if (resultatRequete.next()) {
+                idGenere = resultatRequete.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("La requête de addSport a généré une erreur");
+        }
+        return idGenere;
+    }
+
+
+    public static void updateAthleteSport(Connection cnx, int idAthlete, int idSport) {
+        try {
+            requeteSql = cnx.prepareStatement("UPDATE athlete SET sport_id = ? WHERE id = ?");
+            requeteSql.setInt(1, idSport);
+            requeteSql.setInt(2, idAthlete);
+            requeteSql.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("La requête de updateAthleteSport a généré une erreur");
         }
     }
 }

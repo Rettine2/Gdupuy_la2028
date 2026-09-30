@@ -27,7 +27,6 @@
         .cyber-input { background: rgba(5,5,7,0.8); border: 1px solid var(--border); color: var(--text); padding: 14px 18px; font-family: 'Inter', sans-serif; font-size: 1rem; outline: none; transition: 0.3s; }
         .cyber-input:focus { border-color: var(--gold); background: rgba(255,184,0,0.02); }
 
-        input[type="file"] { padding: 10px; cursor: pointer; color: var(--muted); }
         select[multiple] { height: 130px; }
 
         .btn-submit { font-family: 'Teko', sans-serif; font-size: 1.6rem; color: var(--bg); background: var(--gold); width: 100%; padding: 12px; border: none; cursor: pointer; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); font-weight: 700; transition: 0.3s; text-transform: uppercase; margin-top: 10px; }
@@ -59,21 +58,14 @@
     <% } %>
 
     <div class="form-card">
-        <form action="../ServletSport/ajouter" method="POST" enctype="multipart/form-data">
 
-            <!-- Nom du Sport -->
+        <form action="../ServletSport/ajouter" method="POST">
+
             <div class="form-group">
                 <label class="form-label">Nom du Sport / Discipline *</label>
                 <input type="text" name="nomSport" class="cyber-input" placeholder="Ex: Escalade Sportive" required>
             </div>
 
-            <!-- Image / Illustration (Optionnel) -->
-            <div class="form-group">
-                <label class="form-label">Illustration du Sport (Optionnel)</label>
-                <input type="file" name="imageSport" class="cyber-input">
-            </div>
-
-            <!-- Liste des athlètes pour association (Optionnel) -->
             <div class="form-group">
                 <label class="form-label">Associer des athlètes (Optionnel - Maintenez Ctrl pour en sélectionner plusieurs)</label>
                 <select name="idsAthletes" class="cyber-input" multiple>
