@@ -18,13 +18,18 @@
     .nav-links a.active, .nav-links a:hover { color: var(--volt); text-shadow: 0 0 10px rgba(213,255,0,0.3); }
 
     .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
-    .header-title { font-family: 'Teko', sans-serif; font-size: 4rem; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px; }
+
+    /* MODIF: Flexbox pour aligner le titre et le bouton */
+    .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+    .header-title { font-family: 'Teko', sans-serif; font-size: 4rem; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+
+    .btn-cyber { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--bg); background: var(--volt); padding: 8px 25px; text-decoration: none; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); font-weight: 700; transition: 0.3s; display: inline-block; }
+    .btn-cyber:hover { opacity: 0.85; box-shadow: 0 0 15px rgba(213,255,0,0.4); transform: translateY(-2px); }
 
     .control-center { display: flex; gap: 20px; margin-bottom: 40px; }
     .cyber-input { flex: 1; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 15px 20px; font-family: 'Inter', sans-serif; font-size: 1rem; outline: none; transition: 0.3s; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); }
     .cyber-input:focus { border-color: var(--volt); background: rgba(213,255,0,0.02); }
 
-    /* Correction indispensable pour les listes déroulantes */
     select.cyber-input { cursor: pointer; }
     select.cyber-input option { background-color: var(--surface); color: var(--text); padding: 12px; }
 
@@ -46,7 +51,7 @@
   <a href="../index.html" class="logo">LA28<span>BET</span></a>
   <div class="nav-links">
     <a href="../ServletAthlete/lister">Athlètes</a>
-    <a href="../ServletEpreuve/lister">Épreuves</a>
+    <a href="../ServletEpreuve/lister" class="active">Épreuves</a>
     <a href="../ServletSite/lister">Sites</a>
     <a href="../ServletSport/lister">Sports</a>
     <a href="../ServletPays/lister">Pays</a>
@@ -54,7 +59,11 @@
 </header>
 
 <div class="container">
-  <h1 class="header-title">Marchés Ouverts</h1>
+
+  <div class="header-flex">
+    <h1 class="header-title">Marchés Ouverts</h1>
+    <a href="${pageContext.request.contextPath}/ServletEpreuve/ajouter" class="btn-cyber">+ AJOUTER UNE ÉPREUVE</a>
+  </div>
 
   <div class="control-center">
     <input type="text" id="searchInput" class="cyber-input" placeholder="RECHERCHER UNE COMPÉTITION...">

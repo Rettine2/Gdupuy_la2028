@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import sio.la2028.model.*;
 
@@ -17,7 +18,6 @@ public class DaoEpreuve {
     static ResultSet resultatRequete = null;
 
     public static ArrayList<epreuve> getLesEpreuves(Connection cnx){
-
         ArrayList<epreuve> lesEpreuves = new ArrayList<epreuve>();
         try{
             requeteSql = cnx.prepareStatement("select e.id as e_id, e.nom as e_nom, s.id as s_id, s.nom as s_nom" +
@@ -26,7 +26,6 @@ public class DaoEpreuve {
             resultatRequete = requeteSql.executeQuery();
 
             while (resultatRequete.next()){
-
                 epreuve e = new epreuve();
                 e.setId(resultatRequete.getInt("e_id"));
                 e.setNom(resultatRequete.getString("e_nom"));
@@ -34,12 +33,10 @@ public class DaoEpreuve {
                 Sport s = new Sport();
                 s.setId(resultatRequete.getInt("s_id"));
                 s.setNom(resultatRequete.getString("s_nom"));
-
                 e.setSport(s);
 
                 lesEpreuves.add(e);
             }
-
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -50,9 +47,7 @@ public class DaoEpreuve {
 
     public static epreuve getEpreuveById(Connection cnx, int idEpreuve) {
         epreuve e = null;
-
         try {
-            // 1ère REQUÊTE : On récupère l'épreuve, le sport et les athlètes
             String sqlAthletes = "SELECT e.id AS e_id, e.nom AS e_nom, " +
                     "s.id AS s_id, s.nom AS s_nom, " +
                     "a.id AS a_id, a.prenom AS a_prenom, a.nom AS a_nom, a.date_naissance AS a_date_naissance, " +
@@ -81,7 +76,6 @@ public class DaoEpreuve {
                     s.setNom(resultatRequete.getString("s_nom"));
                     e.setSport(s);
                 }
-
                 if (resultatRequete.getObject("a_id") != null) {
                     Athlete a = new Athlete();
                     a.setId(resultatRequete.getInt("a_id"));
@@ -107,7 +101,6 @@ public class DaoEpreuve {
                 }
             }
 
-            // 2ème REQUÊTE : On récupère les sites associés à cette épreuve (NOUVEAU)
             if (e != null) {
                 String sqlSites = "SELECT si.id, si.nom, si.ville, p.nom as pays_nom " +
                         "FROM site si " +
@@ -132,12 +125,39 @@ public class DaoEpreuve {
                     e.getLesSites().add(site);
                 }
             }
-
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.out.println("La requête getEpreuveById a généré une erreur");
         }
-
         return e;
+    }
+
+    public static void addEpreuve(Connection cnx, epreuve e) {
+        try {
+
+            requeteSql = cnx.prepareStatement("INSERT INTO epreuve (nom, sport_id) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+            requeteSql.setString(1, e.getNom());
+            requeteSql.setInt(2, e.getSport().getId());
+            requeteSql.executeUpdate();
+
+            int idEpreuveGenere = -1;
+            resultatRequete = requeteSql.getGeneratedKeys();
+            if (resultatRequete.next()) {
+                idEpreuveGenere = resultatRequete.getInt(1);
+            }
+
+            if (idEpreuveGenere != -1 && e.getLesSites() != null && !e.getLesSites().isEmpty()) {
+                PreparedStatement reqLink = cnx.prepareStatement("INSERT INTO site_epreuve (site_id, epreuve_id) VALUES (?, ?)");
+                for (Site site : e.getLesSites()) {
+                    reqLink.setInt(1, site.getId());
+                    reqLink.setInt(2, idEpreuveGenere);
+                    reqLink.executeUpdate();
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("La requête addEpreuve a généré une erreur");
+        }
     }
 }
