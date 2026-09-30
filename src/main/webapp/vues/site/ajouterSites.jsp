@@ -1,0 +1,109 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="sio.la2028.model.Pays" %>
+<%@ page import="sio.la2028.model.epreuve" %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter un Site | LA28 BETTING</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Teko:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #050507; --surface: #0f1015; --cyan: #00F0FF; --text: #fff; --muted: #9499ad; --border: #1f2129; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 60px; }
+
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(5,5,7,0.95); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+    .logo { font-family: 'Teko', sans-serif; font-size: 2.5rem; color: var(--text); text-decoration: none; line-height: 1; }
+    .logo span { color: var(--cyan); }
+    .nav-links a { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--muted); text-decoration: none; margin-left: 30px; transition: 0.3s; text-transform: uppercase; }
+    .nav-links a:hover, .nav-links a.active { color: var(--cyan); text-shadow: 0 0 10px rgba(0,240,255,0.3); }
+
+    .container { max-width: 600px; margin: 60px auto; padding: 0 20px; }
+    .header-title { font-family: 'Teko', sans-serif; font-size: 3.5rem; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+
+    .form-card { background: var(--surface); border: 1px solid var(--border); padding: 40px; border-top: 4px solid var(--cyan); box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+    .form-group { margin-bottom: 25px; display: flex; flex-direction: column; gap: 8px; }
+    .form-label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+
+    .cyber-input { background: rgba(5,5,7,0.8); border: 1px solid var(--border); color: var(--text); padding: 14px 18px; font-family: 'Inter', sans-serif; font-size: 1rem; outline: none; transition: 0.3s; }
+    .cyber-input:focus { border-color: var(--cyan); background: rgba(0,240,255,0.02); }
+
+    select.cyber-input option { background-color: var(--surface); color: var(--text); padding: 8px; }
+    select[multiple] { height: 130px; }
+
+    .btn-submit { font-family: 'Teko', sans-serif; font-size: 1.6rem; color: var(--bg); background: var(--cyan); width: 100%; padding: 12px; border: none; cursor: pointer; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); font-weight: 700; transition: 0.3s; text-transform: uppercase; margin-top: 10px; }
+    .btn-submit:hover { opacity: 0.9; box-shadow: 0 0 20px rgba(0,240,255,0.4); }
+
+    .back-btn { font-family: 'Teko', sans-serif; font-size: 1.4rem; color: var(--muted); text-decoration: none; display: inline-block; margin-top: 25px; transition: 0.3s; }
+    .back-btn:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <a href="../index.html" class="logo">LA28<span>BET</span></a>
+  <div class="nav-links">
+    <a href="../ServletAthlete/lister">Athlètes</a>
+    <a href="../ServletEpreuve/lister">Épreuves</a>
+    <a href="../ServletSite/lister" class="active">Sites</a>
+    <a href="../ServletSport/lister">Sports</a>
+    <a href="../ServletPays/lister">Pays</a>
+  </div>
+</header>
+
+<div class="container">
+  <h1 class="header-title">Nouveau Site Olympique</h1>
+
+  <div class="form-card">
+    <form action="../ServletSite/ajouter" method="POST">
+
+      <div class="form-group">
+        <label class="form-label">Nom du Site *</label>
+        <input type="text" name="nomSite" class="cyber-input" placeholder="Ex: SoFi Stadium" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ville d'implantation *</label>
+        <input type="text" name="villeSite" class="cyber-input" placeholder="Ex: Inglewood" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Pays Hôte *</label>
+        <select name="idPays" class="cyber-input" required>
+          <option value="" disabled selected>-- SÉLECTIONNER UN PAYS --</option>
+          <%
+            ArrayList<Pays> lesPays = (ArrayList<Pays>) request.getAttribute("pLesPays");
+            if (lesPays != null) {
+              for (Pays p : lesPays) {
+          %>
+          <option value="<%= p.getId() %>"><%= p.getNom() %></option>
+          <%
+              }
+            }
+          %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Associer des épreuves (Optionnel - Ctrl pour sélection multiple)</label>
+        <select name="idsEpreuves" class="cyber-input" multiple>
+          <%
+            ArrayList<epreuve> lesEpreuves = (ArrayList<epreuve>) request.getAttribute("pLesEpreuves");
+            if (lesEpreuves != null) {
+              for (epreuve e : lesEpreuves) {
+          %>
+          <option value="<%= e.getId() %>"><%= e.getNom() %></option>
+          <%
+              }
+            }
+          %>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-submit">ENREGISTRER LE SITE</button>
+    </form>
+  </div>
+
+  <a href="../ServletSite/lister" class="back-btn">← RETOUR AUX SITES</a>
+</div>
+</body>
+</html>

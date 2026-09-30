@@ -18,7 +18,12 @@
         .nav-links a:hover, .nav-links a.active { color: var(--cyan); text-shadow: 0 0 10px rgba(0,240,255,0.3); }
 
         .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
-        .header-title { font-family: 'Teko', sans-serif; font-size: 4rem; text-transform: uppercase; margin-bottom: 40px; letter-spacing: 1px; }
+
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+        .header-title { font-family: 'Teko', sans-serif; font-size: 4rem; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+
+        .btn-cyber { font-family: 'Teko', sans-serif; font-size: 1.5rem; color: var(--bg); background: var(--cyan); padding: 8px 25px; text-decoration: none; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); font-weight: 700; transition: 0.3s; display: inline-block; }
+        .btn-cyber:hover { opacity: 0.85; box-shadow: 0 0 15px rgba(0,240,255,0.4); transform: translateY(-2px); }
 
         .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
         .site-card { background: var(--surface); border: 1px solid var(--border); padding: 30px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; transition: 0.3s; border-left: 4px solid var(--border); }
@@ -39,14 +44,17 @@
     <div class="nav-links">
         <a href="../ServletAthlete/lister">Athlètes</a>
         <a href="../ServletEpreuve/lister">Épreuves</a>
-        <a href="../ServletSite/lister">Sites</a>
+        <a href="../ServletSite/lister" class="active">Sites</a>
         <a href="../ServletSport/lister">Sports</a>
         <a href="../ServletPays/lister">Pays</a>
     </div>
 </header>
 
 <div class="container">
-    <h1 class="header-title">Arènes Olympiques</h1>
+    <div class="header-flex">
+        <h1 class="header-title">Arènes Olympiques</h1>
+        <a href="${pageContext.request.contextPath}/ServletSite/ajouter" class="btn-cyber">+ AJOUTER UN SITE</a>
+    </div>
 
     <div class="site-grid">
         <% ArrayList<Site> lesSites = (ArrayList)request.getAttribute("pLesSites");

@@ -78,6 +78,10 @@
         <servlet-name>ServletSite</servlet-name>
         <url-pattern>/ServletSite/consulter</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletSite</servlet-name>
+        <url-pattern>/ServletSite/ajouter</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
