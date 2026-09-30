@@ -89,4 +89,34 @@ public class DaoSite {
         }
         return s;
     }
+
+    public static void addSite(Connection cnx, Site site) {
+        try {
+            int newId = 1;
+            requeteSql = cnx.prepareStatement("SELECT MAX(id) as max_id FROM site");
+            resultatRequete = requeteSql.executeQuery();
+            if (resultatRequete.next()) {
+                newId = resultatRequete.getInt("max_id") + 1;
+            }
+
+            requeteSql = cnx.prepareStatement("INSERT INTO site (id, nom, ville, pays_id) VALUES (?, ?, ?, ?)");
+            requeteSql.setInt(1, newId);
+            requeteSql.setString(2, site.getNom());
+            requeteSql.setString(3, site.getVille());
+            requeteSql.setInt(4, site.getPays().getId());
+            requeteSql.executeUpdate();
+
+            if (site.getLesEpreuves() != null && !site.getLesEpreuves().isEmpty()) {
+                for (epreuve e : site.getLesEpreuves()) {
+                    requeteSql = cnx.prepareStatement("INSERT INTO site_epreuve (site_id, epreuve_id) VALUES (?, ?)");
+                    requeteSql.setInt(1, newId);
+                    requeteSql.setInt(2, e.getId());
+                    requeteSql.executeUpdate();
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("La requête addSite a généré une erreur");
+        }
+    }
 }
