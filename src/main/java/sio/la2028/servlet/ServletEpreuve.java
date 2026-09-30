@@ -23,10 +23,7 @@ public class ServletEpreuve extends HttpServlet {
     public void init()
     {
         ServletContext servletContext=getServletContext();
-
-        System.out.println("SERVLET CONTEXT=" + servletContext.getContextPath());
         cnx = (Connection)servletContext.getAttribute("connection");
-
         try {
             System.out.println("INIT SERVLET=" + cnx.getSchema());
         } catch (SQLException ex) {
@@ -34,74 +31,75 @@ public class ServletEpreuve extends HttpServlet {
         }
     }
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ServletEpreuve</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ServletEpreuve at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        // ...
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String url = request.getRequestURI();
 
-        // Récup et affichage les épreuves
-        if(url.equals("/la2028/ServletEpreuve/lister"))
-        {
+        if(url.equals("/la2028/ServletEpreuve/lister")) {
             ArrayList<epreuve> lesEpreuves = DaoEpreuve.getLesEpreuves(cnx);
             request.setAttribute("pLesEpreuves", lesEpreuves);
-            //System.out.println("lister eleves - nombres d'élèves récupérés" + lesEleves.size() );
             getServletContext().getRequestDispatcher("/vues/epreuve/listerEpreuves.jsp").forward(request, response);
         }
-        if(url.equals("/la2028/ServletEpreuve/consulter"))
-        {
+        else if(url.equals("/la2028/ServletEpreuve/consulter")) {
             int idEpreuve = Integer.parseInt(request.getParameter("idEpreuve"));
             epreuve e = DaoEpreuve.getEpreuveById(cnx, idEpreuve);
             request.setAttribute("pEpreuve", e);
             getServletContext().getRequestDispatcher("/vues/epreuve/consulterEpreuves.jsp").forward(request, response);
         }
+        // --- NOUVELLE ROUTE GET ---
+        else if(url.equals("/la2028/ServletEpreuve/ajouter")) {
+            ArrayList<Sport> lesSports = DaoSport.getLesSports(cnx);
+            ArrayList<Site> lesSites = DaoSite.getLesSites(cnx); // Nécessite que DaoSite soit fonctionnel
+
+            request.setAttribute("pLesSports", lesSports);
+            request.setAttribute("pLesSites", lesSites);
+            getServletContext().getRequestDispatcher("/vues/epreuve/ajouterEpreuves.jsp").forward(request, response);
+        }
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+        String url = request.getRequestURI();
+
+        if(url.equals("/la2028/ServletEpreuve/ajouter")) {
+            String nomEpreuve = request.getParameter("nomEpreuve");
+            int idSport = Integer.parseInt(request.getParameter("idSport"));
+            String[] idsSites = request.getParameterValues("idsSites");
+
+            epreuve e = new epreuve();
+            e.setNom(nomEpreuve);
+
+            Sport s = new Sport();
+            s.setId(idSport);
+            e.setSport(s);
+
+            ArrayList<Site> sitesLies = new ArrayList<>();
+            if (idsSites != null) {
+                for (String idSiteStr : idsSites) {
+                    Site site = new Site();
+                    site.setId(Integer.parseInt(idSiteStr));
+                    sitesLies.add(site);
+                }
+            }
+            e.setLesSites(sitesLies);
+
+            DaoEpreuve.addEpreuve(cnx, e);
+            response.sendRedirect(request.getContextPath() + "/ServletEpreuve/lister");
+        }
+    }
+
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }
-
