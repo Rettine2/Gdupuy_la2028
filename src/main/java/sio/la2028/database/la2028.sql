@@ -1,96 +1,104 @@
--- phpMyAdmin SQL Dump
--- version 5.2.3
--- https://www.phpmyadmin.net/
---
--- Hôte : 127.0.0.1:3307
--- Généré le : lun. 14 sep. 2026 à 12:17
--- Version du serveur : 11.4.9-MariaDB
--- Version de PHP : 8.3.28
+-- ============================================================
+--  Base de données : la2028  (Jeux Olympiques Los Angeles 2028)
+--  Script complet : structure + jeu de données
+--  Cible : MariaDB 11.x / MySQL 8 (port 3307 dans ConnexionBdd.java)
+-- ============================================================
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
 SET time_zone = "+00:00";
+SET NAMES utf8mb4;
 
+CREATE DATABASE IF NOT EXISTS `la2028` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `la2028`;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de données : `la2028`
---
-
--- --------------------------------------------------------
-
---
--- Structure de la table `athlete`
---
-
-DROP TABLE IF EXISTS `athlete`;
-CREATE TABLE IF NOT EXISTS `athlete` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `prenom` varchar(25) NOT NULL,
-  `nom` varchar(50) NOT NULL,
-  `date_naissance` date NOT NULL,
-  `pays_id` int(11) NOT NULL,
-  `sport_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `fk_ath_pays` (`pays_id`) USING BTREE,
-  KEY `fk_ath_sport` (`sport_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `athlete`
---
-
-INSERT INTO `athlete` (`id`, `prenom`, `nom`, `date_naissance`, `pays_id`, `sport_id`) VALUES
-(1, 'Teddy', 'Rinner', '1989-04-07', 1, 11),
-(2, 'Simone', 'Biles', '1997-03-14', 2, 8);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `epreuve`
---
-
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `site_epreuve`;
+DROP TABLE IF EXISTS `epreuve_athlete`;
 DROP TABLE IF EXISTS `epreuve`;
-CREATE TABLE IF NOT EXISTS `epreuve` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(100) NOT NULL,
-  `athlete_id` int(11) NOT NULL,
-  `sport_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `fk_ath_athlete` (`athlete_id`),
-  KEY `fk_ath_sport_epreuve` (`sport_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `epreuve`
---
-
-INSERT INTO `epreuve` (`id`, `nom`, `athlete_id`, `sport_id`) VALUES
-(1, '1 versus 1 ', 1, 11),
-(2, 'showoff', 2, 8);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `pays`
---
-
+DROP TABLE IF EXISTS `athlete`;
+DROP TABLE IF EXISTS `site`;
+DROP TABLE IF EXISTS `sport`;
 DROP TABLE IF EXISTS `pays`;
-CREATE TABLE IF NOT EXISTS `pays` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `Code` varchar(3) NOT NULL,
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- ------------------------------------------------------------
+--  STRUCTURE
+-- ------------------------------------------------------------
+
+CREATE TABLE `pays` (
+  `id`   int(11)     NOT NULL AUTO_INCREMENT,
+  `Code` varchar(3)  NOT NULL,
+  `nom`  varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_pays_code` (`Code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `sport` (
+  `id`  int(11)     NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=229 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `pays`
---
+-- NB : prenom / date_naissance / sport_id sont tolérants (NULL ou défaut) car
+-- DaoAthlete.addAthlete() n'insère aujourd'hui que (nom, pays_id).
+CREATE TABLE `athlete` (
+  `id`             int(11)     NOT NULL AUTO_INCREMENT,
+  `prenom`         varchar(25) NOT NULL DEFAULT '',
+  `nom`            varchar(50) NOT NULL,
+  `date_naissance` date        DEFAULT NULL,
+  `pays_id`        int(11)     NOT NULL,
+  `sport_id`       int(11)     DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_ath_pays`  (`pays_id`),
+  KEY `fk_ath_sport` (`sport_id`),
+  CONSTRAINT `fk_ath_pays`  FOREIGN KEY (`pays_id`)  REFERENCES `pays`  (`id`),
+  CONSTRAINT `fk_ath_sport` FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `site` (
+  `id`      int(11)      NOT NULL AUTO_INCREMENT,
+  `nom`     varchar(100) NOT NULL,
+  `ville`   varchar(100) NOT NULL,
+  `pays_id` int(11)      NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_site_pays` (`pays_id`),
+  CONSTRAINT `fk_site_pays` FOREIGN KEY (`pays_id`) REFERENCES `pays` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `epreuve` (
+  `id`       int(11)      NOT NULL AUTO_INCREMENT,
+  `nom`      varchar(100) NOT NULL,
+  `sport_id` int(11)      NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epreuve_sport` (`sport_id`),
+  CONSTRAINT `fk_epreuve_sport` FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Athlètes engagés dans une épreuve (relation n-n)
+CREATE TABLE `epreuve_athlete` (
+  `epreuve_id` int(11) NOT NULL,
+  `athlete_id` int(11) NOT NULL,
+  PRIMARY KEY (`epreuve_id`, `athlete_id`),
+  KEY `fk_ea_athlete` (`athlete_id`),
+  CONSTRAINT `fk_ea_epreuve` FOREIGN KEY (`epreuve_id`) REFERENCES `epreuve` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_ea_athlete` FOREIGN KEY (`athlete_id`) REFERENCES `athlete` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Sites accueillant une épreuve (relation n-n)
+CREATE TABLE `site_epreuve` (
+  `site_id`    int(11) NOT NULL,
+  `epreuve_id` int(11) NOT NULL,
+  PRIMARY KEY (`site_id`, `epreuve_id`),
+  KEY `fk_se_epreuve` (`epreuve_id`),
+  CONSTRAINT `fk_se_site`    FOREIGN KEY (`site_id`)    REFERENCES `site`    (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_se_epreuve` FOREIGN KEY (`epreuve_id`) REFERENCES `epreuve` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+--  DONNÉES
+-- ------------------------------------------------------------
+
+-- Pays (liste existante ; doublons USA/FRA supprimés, libellés corrompus corrigés)
 INSERT INTO `pays` (`id`, `Code`, `nom`) VALUES
 (1, 'FRA', 'France'),
 (2, 'USA', 'Etats-Unis'),
@@ -144,13 +152,13 @@ INSERT INTO `pays` (`id`, `Code`, `nom`) VALUES
 (50, 'ANZ', 'Australasia (1908-1912)'),
 (51, 'BOH', 'Bohemia (TCH since 1920)'),
 (52, 'HBR', 'British Honduras'),
-(53, 'BWI', 'British West Indies (BAR, JAM'),
+(53, 'BWI', 'British West Indies'),
 (54, 'BIR', 'Burma (until 1989)'),
 (55, 'CRC', 'Costa Rica'),
 (56, 'TCH', 'Czechoslovakia'),
 (57, 'YMD', 'Democratic Republic of Yemen'),
-(58, 'FRG', 'Federal Republic of Germany (1950-1990, &quot;GER&'),
-(59, 'GDR', 'German Democratic Republic (1955-1990, '),
+(58, 'FRG', 'Federal Republic of Germany (1950-1990)'),
+(59, 'GDR', 'German Democratic Republic (1955-1990)'),
 (60, 'IOP', 'Independant Participant'),
 (61, 'IOA', 'Independent Olympic Athlete'),
 (62, 'MIX', 'Mixed NOCs'),
@@ -158,14 +166,14 @@ INSERT INTO `pays` (`id`, `Code`, `nom`) VALUES
 (64, 'ZZZ', 'Other countries'),
 (65, 'RHO', 'Rhodesia (until 1968)'),
 (66, 'RU1', 'Russia'),
-(67, 'SER', 'Serbia - Yougoslavie YUG since'),
+(67, 'SER', 'Serbia (Yugoslavia until 2003)'),
 (68, 'SCG', 'Serbia and Montenegro'),
 (69, 'EUN', 'Unified Team (ex USSR)'),
 (70, 'EUA', 'United Team of Germany (1956,1960,1964)'),
 (71, 'URS', 'USSR'),
 (72, 'YUG', 'Yugoslavia'),
 (73, 'ZAI', 'Zaire (1971-1997)'),
-(74, 'CIV', 'C&#244;te d\'Ivoire'),
+(74, 'CIV', 'Côte d\'Ivoire'),
 (75, 'CRO', 'Croatia'),
 (76, 'CUB', 'Cuba'),
 (77, 'DEN', 'Denmark'),
@@ -179,12 +187,10 @@ INSERT INTO `pays` (`id`, `Code`, `nom`) VALUES
 (85, 'ERI', 'Eritrea'),
 (86, 'ESP', 'Spain'),
 (87, 'EST', 'Estonia'),
-(88, 'USA', 'United States of America'),
 (89, 'ETH', 'Ethiopia'),
 (90, 'MKD', 'The Former Yugoslav Republic of Macedonia'),
 (91, 'FIJ', 'Fiji'),
 (92, 'FIN', 'Finland'),
-(93, 'FRA', 'France'),
 (94, 'GAB', 'Gabon'),
 (95, 'GAM', 'Gambia'),
 (96, 'GEO', 'Georgia'),
@@ -321,23 +327,7 @@ INSERT INTO `pays` (`id`, `Code`, `nom`) VALUES
 (227, 'ZAM', 'Zambia'),
 (228, 'ZIM', 'Zimbabwe');
 
--- --------------------------------------------------------
-
---
--- Structure de la table `sport`
---
-
-DROP TABLE IF EXISTS `sport`;
-CREATE TABLE IF NOT EXISTS `sport` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `sport`
---
-
+-- Sports (liste existante)
 INSERT INTO `sport` (`id`, `nom`) VALUES
 (1, 'Athlétisme'),
 (2, 'Badminton'),
@@ -367,25 +357,179 @@ INSERT INTO `sport` (`id`, `nom`) VALUES
 (26, 'Haltérophilie'),
 (27, 'Lutte');
 
---
--- Contraintes pour les tables déchargées
---
+-- Athlètes (les ids 1 et 2 sont ceux de la base d'origine)
+-- Dates marquées « à vérifier » : non certaines, à contrôler avant rendu
+INSERT INTO `athlete` (`id`, `prenom`, `nom`, `date_naissance`, `pays_id`, `sport_id`) VALUES
+(1, 'Teddy', 'Riner', '1989-04-07', 1, 11),
+(2, 'Simone', 'Biles', '1997-03-14', 2, 8),
+(3, 'Alexander', 'Zverev', '1997-04-20', 5, 18),
+(4, 'Ariarne', 'Titmus', '2000-09-07', 14, 24),
+(5, 'Aryna', 'Sabalenka', '1998-05-05', 21, 18),
+(6, 'Aurélien', 'Giraud', '1996-03-14', 1, 14), -- date à vérifier
+(7, 'Caeleb', 'Dressel', '1996-08-16', 2, 24),
+(8, 'Cejhae', 'Greene', '1995-10-26', 8, 1), -- date à vérifier
+(9, 'Clarisse', 'Agbegnenou', '1992-10-25', 1, 11),
+(10, 'Coco', 'Gauff', '2004-03-13', 2, 18),
+(11, 'Diego Sebastián', 'Schwartzman', '1992-08-16', 11, 18),
+(12, 'Djamel', 'Sedjati', '1999-01-21', 4, 1),
+(13, 'Estelle', 'Mossely', '1992-07-04', 1, 3), -- date à vérifier
+(14, 'Florent', 'Manaudou', '1990-11-12', 1, 24),
+(15, 'Hidayat', 'Heydarov', '1998-01-01', 16, 3), -- date à vérifier
+(16, 'Imane', 'Khelif', '1999-05-02', 4, 3),
+(17, 'Indrit', 'Cullhaj', '1998-01-01', 3, 3), -- date à vérifier
+(18, 'Johanne', 'Defay', '1993-12-27', 1, 16),
+(19, 'John John', 'Florence', '1992-10-18', 2, 16),
+(20, 'Katie', 'Ledecky', '1997-03-17', 2, 24),
+(21, 'Kauli', 'Vaast', '2002-01-05', 1, 16), -- date à vérifier
+(22, 'Kaylia', 'Nemour', '2006-03-20', 4, 8), -- date à vérifier
+(23, 'Kevin', 'Mayer', '1992-02-10', 1, 1),
+(24, 'Kyle', 'Chalmers', '1998-06-25', 14, 24),
+(25, 'Lotte', 'Kopecky', '1996-01-10', 22, 4),
+(26, 'Léon', 'Marchand', '2002-05-17', 1, 24),
+(27, 'Malaika', 'Mihambo', '1994-02-03', 5, 1),
+(28, 'Mélanie', 'De Jesus dos Santos', '2000-03-04', 1, 8),
+(29, 'Noah', 'Lyles', '1997-07-18', 2, 1),
+(30, 'Nyjah', 'Huston', '1994-11-30', 2, 14),
+(31, 'Pauline', 'Ferrand-Prévot', '1992-05-10', 1, 4),
+(32, 'Remco', 'Evenepoel', '2000-01-25', 22, 4),
+(33, 'Romane', 'Dicko', '1999-09-01', 1, 11), -- date à vérifier
+(34, 'Sasha', 'Zhoya', '2002-01-09', 1, 1), -- date à vérifier
+(35, 'Sha\'Carri', 'Richardson', '2000-03-25', 2, 1),
+(36, 'Sofiane', 'Oumiha', '1994-11-08', 1, 3), -- date à vérifier
+(37, 'Sunisa', 'Lee', '2003-03-09', 2, 8),
+(38, 'Sydney', 'McLaughlin', '1999-08-07', 2, 1),
+(39, 'Taylor', 'Fritz', '1997-10-28', 2, 18),
+(40, 'Wout', 'Van Aert', '1994-09-15', 22, 4);
 
---
--- Contraintes pour la table `athlete`
---
-ALTER TABLE `athlete`
-  ADD CONSTRAINT `fk_ath_pays` FOREIGN KEY (`pays_id`) REFERENCES `pays` (`id`),
-  ADD CONSTRAINT `fk_ath_sport` FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`);
+-- Sites (venues LA28 ; les noms contiennent les mots-clés utilisés par les JSP pour les images)
+INSERT INTO `site` (`id`, `nom`, `ville`, `pays_id`) VALUES
+(1, 'Los Angeles Memorial Coliseum', 'Los Angeles', 2),
+(2, 'SoFi Stadium', 'Inglewood', 2),
+(3, 'Crypto.com Arena', 'Los Angeles', 2),
+(4, 'Peacock Theater', 'Los Angeles', 2),
+(5, 'Los Angeles Convention Center', 'Los Angeles', 2),
+(6, 'Dignity Health Tennis Center', 'Carson', 2),
+(7, 'Santa Monica Beach', 'Santa Monica', 2),
+(8, 'Sepulveda Basin Recreation Area', 'Los Angeles', 2),
+(9, 'Trestles Beach', 'San Clemente', 2);
 
---
--- Contraintes pour la table `epreuve`
---
-ALTER TABLE `epreuve`
-  ADD CONSTRAINT `fk_ath_athlete` FOREIGN KEY (`athlete_id`) REFERENCES `athlete` (`id`),
-  ADD CONSTRAINT `fk_ath_sport_epreuve` FOREIGN KEY (`sport_id`) REFERENCES `sport` (`id`);
-COMMIT;
+-- Épreuves (ids 1 et 2 : remplacent les libellés provisoires « 1 versus 1 » et « showoff »)
+INSERT INTO `epreuve` (`id`, `nom`, `sport_id`) VALUES
+(1, 'Judo +100 kg hommes', 11),
+(2, 'Concours général individuel femmes', 8),
+(3, '100 m hommes', 1),
+(4, '100 m femmes', 1),
+(5, '400 m haies femmes', 1),
+(6, '800 m hommes', 1),
+(7, 'Décathlon', 1),
+(8, 'Saut en longueur femmes', 1),
+(9, '110 m haies hommes', 1),
+(10, '50 m nage libre hommes', 24),
+(11, '100 m nage libre hommes', 24),
+(12, '200 m 4 nages hommes', 24),
+(13, '400 m nage libre femmes', 24),
+(14, '800 m nage libre femmes', 24),
+(15, 'Simple messieurs', 18),
+(16, 'Simple dames', 18),
+(17, 'Skateboard park hommes', 14),
+(18, 'Skateboard street hommes', 14),
+(19, 'Surf hommes', 16),
+(20, 'Surf femmes', 16),
+(21, 'Course en ligne hommes', 4),
+(22, 'Contre-la-montre individuel hommes', 4),
+(23, 'Course en ligne femmes', 4),
+(24, 'Boxe -60 kg hommes', 3),
+(25, 'Boxe -60 kg femmes', 3),
+(26, 'Boxe -66 kg femmes', 3),
+(27, 'Boxe -71 kg hommes', 3),
+(28, 'Judo -63 kg femmes', 11),
+(29, 'Judo +78 kg femmes', 11),
+(30, 'Barres asymétriques', 8);
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Participation des athlètes aux épreuves
+INSERT INTO `epreuve_athlete` (`epreuve_id`, `athlete_id`) VALUES
+(1, 1),
+(2, 2),
+(2, 37),
+(2, 22),
+(2, 28),
+(3, 29),
+(3, 8),
+(4, 35),
+(5, 38),
+(6, 12),
+(7, 23),
+(8, 27),
+(9, 34),
+(10, 14),
+(10, 7),
+(11, 7),
+(11, 24),
+(12, 26),
+(13, 4),
+(13, 20),
+(14, 20),
+(14, 4),
+(15, 3),
+(15, 39),
+(15, 11),
+(16, 5),
+(16, 10),
+(17, 6),
+(18, 30),
+(19, 19),
+(19, 21),
+(20, 18),
+(21, 32),
+(21, 40),
+(22, 32),
+(22, 40),
+(23, 25),
+(23, 31),
+(24, 36),
+(25, 13),
+(26, 16),
+(27, 15),
+(27, 17),
+(28, 9),
+(29, 33),
+(30, 22),
+(30, 37);
+
+-- Sites hébergeant les épreuves
+INSERT INTO `site_epreuve` (`site_id`, `epreuve_id`) VALUES
+(5, 1),
+(3, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(2, 10),
+(2, 11),
+(2, 12),
+(2, 13),
+(2, 14),
+(6, 15),
+(6, 16),
+(8, 17),
+(8, 18),
+(9, 19),
+(9, 20),
+(7, 21),
+(7, 22),
+(7, 23),
+(4, 24),
+(3, 24),
+(4, 25),
+(3, 25),
+(4, 26),
+(3, 26),
+(4, 27),
+(3, 27),
+(5, 28),
+(5, 29),
+(3, 30);
+
